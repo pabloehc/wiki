@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 import markdown2
+from random import choice
 
 from . import util
 
@@ -98,3 +99,9 @@ def edit_page(request, title):
                 "form": SearchForm(),
                 'PageForm': pageform
         })
+
+def random(request):
+    entries = util.list_entries()
+    title = choice(entries)
+
+    return HttpResponseRedirect(reverse('entry', kwargs={'title': title}))
