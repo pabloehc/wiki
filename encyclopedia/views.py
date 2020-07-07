@@ -60,13 +60,23 @@ def new_page(request):
 
         if form.is_valid():
             title = form.cleaned_data['title']
-            content = form.cleaned_data['content']
-            
-        return render (request, "encyclopedia/new_page.html", {
-            'newPageForm': [title, content]
-        })
 
+            # check if an entry already existed
+            previous = util.get_entry(title)
+
+            if previous:
+                return render(request, "encyclopedia/entry.html", {
+                    "title": "Error",
+                    "content": f"An entry for {title} already exists!"
+                })
+            
+            else:
+                util.save_entry(title, form.cleaned_data['content'])
+                return HttpResponseRedirect(reverse('entry', kwargs={'title': title}))
+    
+    # Get request
     else:
         return render (request, "encyclopedia/new_page.html", {
+            "form": SearchForm(),
             'newPageForm': NewPageForm()
         })
