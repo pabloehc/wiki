@@ -8,10 +8,8 @@
     <h2>Edit {{ title }}</h2>
     <form action="{% url 'edit_page' title=title %}" method='post'>
         {% csrf_token %}
-        {% for field in PageForm %}
-            {{ field }}
-            <br><br>
-        {% endfor %}
+        {{ EditPageForm }}
+        <br>
         <input type='submit'></input>
     </form>
     <p></p>
