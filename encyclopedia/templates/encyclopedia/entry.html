@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-
+    <a href="{% url 'edit_page' title=title %}">Edit</a>
     {{ content|safe }}
 
 {% endblock %}

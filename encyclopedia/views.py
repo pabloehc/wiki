@@ -9,7 +9,7 @@ from . import util
 class SearchForm(forms.Form):
     query = forms.CharField(label="", widget=forms.TextInput(attrs={'placeholder': 'Search Encyclopedia'}))
 
-class NewPageForm(forms.Form):
+class PageForm(forms.Form):
     title = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder': 'Page\'s title'}))
     content = forms.CharField(label='', widget=forms.Textarea(attrs={'placeholder': 'Write the entry\'s content'}))
 
@@ -57,7 +57,7 @@ def entry(request, title):
 
 def new_page(request):
     if request.method == "POST":
-        form = NewPageForm(request.POST)
+        form = PageForm(request.POST)
 
         if form.is_valid():
             title = form.cleaned_data['title']
@@ -79,5 +79,22 @@ def new_page(request):
     else:
         return render (request, "encyclopedia/new_page.html", {
             "form": SearchForm(),
-            'newPageForm': NewPageForm()
+            'PageForm': PageForm()
+        })
+
+def edit_page(request, title):
+    if request.method == "POST":
+        form = PageForm(request.POST)
+
+        if form.is_valid():
+            util.save_entry(title, form.cleaned_data['content'])
+            return HttpResponseRedirect(reverse('entry', kwargs={'title': title}))
+
+    else:
+        pageform = PageForm({"title": title, "content": util.get_entry(title)})
+
+        return render (request, "encyclopedia/edit_page.html", {
+                "title": title,
+                "form": SearchForm(),
+                'PageForm': pageform
         })

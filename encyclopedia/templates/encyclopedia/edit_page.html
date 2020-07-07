@@ -1,12 +1,12 @@
 {% extends "encyclopedia/layout.html" %}
 
 {% block title %}
-    New Page
+    Edit
 {% endblock %}
 
 {% block body %}
-    <h2>Create a New Page</h2>
-    <form action="{% url 'new_page' %}" method='post'>
+    <h2>Edit {{ title }}</h2>
+    <form action="{% url 'edit_page' title=title %}" method='post'>
         {% csrf_token %}
         {% for field in PageForm %}
             {{ field }}
