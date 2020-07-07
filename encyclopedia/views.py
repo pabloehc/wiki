@@ -2,6 +2,7 @@ from django import forms
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
+import markdown2
 
 from . import util
 
@@ -50,7 +51,7 @@ def entry(request, title):
 
     return render(request, "encyclopedia/entry.html", {
         "title": title.capitalize(),
-        "content": content,
+        "content": markdown2.markdown(content),
         "form": SearchForm()
     })
 
