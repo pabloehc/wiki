@@ -8,6 +8,10 @@ from . import util
 class SearchForm(forms.Form):
     query = forms.CharField(label="", widget=forms.TextInput(attrs={'placeholder': 'Search Encyclopedia'}))
 
+class NewPageForm(forms.Form):
+    title = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder': 'Page\'s title'}))
+    content = forms.CharField(label='', widget=forms.Textarea(attrs={'placeholder': 'Write the entry\'s content'}))
+
 def index(request):
     entries = util.list_entries()
     heading = "All Pages"
@@ -49,3 +53,20 @@ def entry(request, title):
         "content": content,
         "form": SearchForm()
     })
+
+def new_page(request):
+    if request.method == "POST":
+        form = NewPageForm(request.POST)
+
+        if form.is_valid():
+            title = form.cleaned_data['title']
+            content = form.cleaned_data['content']
+            
+        return render (request, "encyclopedia/new_page.html", {
+            'newPageForm': [title, content]
+        })
+
+    else:
+        return render (request, "encyclopedia/new_page.html", {
+            'newPageForm': NewPageForm()
+        })
